@@ -9,6 +9,8 @@ route is measured, and fleet performance is ranked. The core remains a clean
 Python implementation while the product layer adds a polished, responsive
 operations experience.
 
+**Live product:** https://fastbox-delivery-intelligence.vercel.app
+
 ## Highlights
 
 - Exact Euclidean nearest-agent assignment
