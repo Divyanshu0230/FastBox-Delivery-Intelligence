@@ -1,0 +1,38 @@
+{
+  "A1": {
+    "packages_delivered": 2,
+    "package_ids": [
+      "P1",
+      "P4"
+    ],
+    "pickup_distance": 14.14,
+    "delivery_distance": 64.14,
+    "total_distance": 78.28,
+    "efficiency": 39.14,
+    "delay_minutes": 0
+  },
+  "A2": {
+    "packages_delivered": 2,
+    "package_ids": [
+      "P2",
+      "P5"
+    ],
+    "pickup_distance": 36.06,
+    "delivery_distance": 36.18,
+    "total_distance": 72.24,
+    "efficiency": 36.12,
+    "delay_minutes": 0
+  },
+  "A3": {
+    "packages_delivered": 1,
+    "package_ids": [
+      "P3"
+    ],
+    "pickup_distance": 7.07,
+    "delivery_distance": 7.07,
+    "total_distance": 14.14,
+    "efficiency": 14.14,
+    "delay_minutes": 0
+  },
+  "best_agent": "A3"
+}

@@ -1,0 +1,390 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="FastBox intelligent last-mile delivery simulator" />
+    <title>FastBox — Delivery Intelligence</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="{{ url_for('static', filename='control-tower.css') }}" />
+  </head>
+  <body>
+    <div class="noise" aria-hidden="true"></div>
+    <header class="topbar">
+      <a class="brand" href="/" aria-label="FastBox Control Tower">
+        <span class="brand-mark">
+          <svg viewBox="0 0 32 32" aria-hidden="true">
+            <path d="M5 9.5 16 4l11 5.5v13L16 28 5 22.5v-13Z" />
+            <path d="m5 9.5 11 5.7 11-5.7M16 15.2V28M10.5 6.8l11 5.7" />
+          </svg>
+        </span>
+        <span>FASTBOX<small>Control tower</small></span>
+      </a>
+      <nav aria-label="Primary navigation">
+        <a href="#overview" class="active">Overview</a>
+        <a href="#network">Live network</a>
+        <a href="#performance">Fleet</a>
+        <a href="#routes">Routes</a>
+      </nav>
+      <div class="top-actions">
+        <button class="icon-button" id="notification-button" aria-label="Notifications">
+          <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M5.5 8a4.5 4.5 0 0 1 9 0c0 5 2 5 2 6h-13c0-1 2-1 2-6ZM8 16h4" /></svg>
+          <i></i>
+        </button>
+        <span class="system-status"><i></i> All systems live</span>
+      </div>
+    </header>
+
+    <main id="overview">
+      <section class="hero">
+        <div class="hero-copy">
+          <p class="eyebrow"><span>LIVE</span> Last-mile command center</p>
+          <h1>Move smarter.<br /><em>Deliver faster.</em></h1>
+          <p class="hero-text">
+            One intelligent view for dispatch, fleet performance and every package
+            moving through your network.
+          </p>
+          <div class="hero-actions">
+            <a class="button primary" href="#control">
+              Plan today’s routes
+              <svg viewBox="0 0 20 20" aria-hidden="true"><path d="m7 4 6 6-6 6" /></svg>
+            </a>
+            <a class="text-link" href="#network">
+              Explore live network
+              <span>↗</span>
+            </a>
+          </div>
+          <div class="hero-proof">
+            <div><strong>100%</strong><span>Package coverage</span></div>
+            <div><strong id="hero-agents">3</strong><span>Agents coordinated</span></div>
+            <div><strong>&lt;1s</strong><span>Plan generation</span></div>
+          </div>
+        </div>
+        <div class="hero-visual" aria-hidden="true">
+          <div class="hero-map-grid"></div>
+          <div class="radar-ring ring-a"></div>
+          <div class="radar-ring ring-b"></div>
+          <div class="radar-ring ring-c"></div>
+          <div class="radar-sweep"></div>
+          <span class="city-label label-north">NORTH HUB</span>
+          <span class="city-label label-central">CENTRAL</span>
+          <span class="city-label label-south">SOUTH BAY</span>
+          <div class="route-beam beam-a"><i></i></div>
+          <div class="route-beam beam-b"><i></i></div>
+          <div class="hero-hub">
+            <span class="hub-pulse"></span>
+            <div class="hub-logo">F<span>B</span></div>
+            <small>CONTROL<br />TOWER</small>
+          </div>
+          <div class="floating-stat stat-a"><i></i><span><small>On route</small>11 packages</span></div>
+          <div class="floating-stat stat-b"><span><small>Network health</small>Excellent</span><b>98</b></div>
+        </div>
+      </section>
+
+      <section class="workspace" id="control">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow"><span>01</span> Operation setup</p>
+            <h2>Launch today’s network</h2>
+          </div>
+          <p>Choose an operating scenario or import a dispatch manifest to generate a
+            complete route plan in seconds.</p>
+        </div>
+
+        <div class="control-panel">
+          <div class="case-control">
+            <label for="case-select">Operating scenario</label>
+            <div class="select-wrap">
+              <select id="case-select" aria-describedby="case-meta">
+                <option>Loading scenarios…</option>
+              </select>
+              <svg viewBox="0 0 20 20" aria-hidden="true"><path d="m6 8 4 4 4-4" /></svg>
+            </div>
+            <div id="case-meta" class="case-meta" aria-live="polite"></div>
+          </div>
+          <span class="or">OR</span>
+          <label class="drop-zone" id="drop-zone" for="file-input">
+            <input id="file-input" type="file" accept=".json,application/json" />
+            <span class="upload-icon">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M12 16V4m0 0L7.5 8.5M12 4l4.5 4.5M5 14v5h14v-5" />
+              </svg>
+            </span>
+            <span><strong>Import dispatch manifest</strong><small>Drop JSON or browse</small></span>
+          </label>
+          <button class="run-button" id="run-button">
+            <span>Generate route plan</span>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 6 9 6-9 6V6Z" /></svg>
+          </button>
+          <button class="advanced-toggle" id="advanced-toggle" aria-expanded="false">
+            <span><i>+</i> Scenario controls</span>
+            <small>Delays · mid-day agent</small>
+          </button>
+        </div>
+        <div class="advanced-panel" id="advanced-panel" hidden>
+          <div class="option-block">
+            <label class="switch-row">
+              <span><strong>Traffic delay simulation</strong><small>Add seeded delivery delays for a repeatable disruption test.</small></span>
+              <input id="delay-toggle" type="checkbox" />
+              <i></i>
+            </label>
+            <div class="option-fields">
+              <label>Random seed<input id="delay-seed" type="number" value="42" min="0" /></label>
+              <label>Max delay<input id="max-delay" type="number" value="45" min="0" max="240" /></label>
+            </div>
+          </div>
+          <div class="option-block">
+            <label class="switch-row">
+              <span><strong>Mid-day agent arrival</strong><small>Add capacity after part of the manifest is assigned.</small></span>
+              <input id="join-toggle" type="checkbox" />
+              <i></i>
+            </label>
+            <div class="option-fields join-fields">
+              <label>Agent ID<input id="join-id" value="AX" maxlength="12" /></label>
+              <label>X coordinate<input id="join-x" type="number" value="50" /></label>
+              <label>Y coordinate<input id="join-y" type="number" value="50" /></label>
+              <label>Join after<input id="joins-after" type="number" value="3" min="0" /></label>
+            </div>
+          </div>
+        </div>
+        <div class="alert" id="alert" role="alert" hidden></div>
+      </section>
+
+      <section class="results" id="results" aria-live="polite">
+        <div class="live-heading">
+          <div>
+            <span class="live-dot"></span>
+            <p>Live operation</p>
+            <strong id="operation-name">Base case</strong>
+          </div>
+          <span id="last-updated">Updated just now</span>
+        </div>
+
+        <div class="kpi-grid">
+          <article class="kpi featured clickable" tabindex="0" role="button" data-target="#routes">
+            <div class="kpi-top"><span>Delivery completion</span><i>↗ 100%</i></div>
+            <div class="kpi-main"><strong id="kpi-delivered">—</strong><small>packages</small></div>
+            <div class="mini-progress"><i id="completion-fill"></i></div>
+            <p id="kpi-delivered-note">Awaiting route plan</p>
+          </article>
+          <article class="kpi clickable" tabindex="0" role="button" data-target="#network">
+            <div class="kpi-top"><span>Network distance</span><i class="neutral">LIVE</i></div>
+            <div class="kpi-main"><strong id="kpi-distance">—</strong><small>units</small></div>
+            <svg class="sparkline" viewBox="0 0 160 38" preserveAspectRatio="none" aria-hidden="true">
+              <path class="spark-area" d="M0 35L0 30L22 27L42 29L64 16L83 21L103 9L124 15L143 5L160 8V38H0Z" />
+              <path d="M0 30L22 27L42 29L64 16L83 21L103 9L124 15L143 5L160 8" />
+            </svg>
+            <p>Across pickup and delivery legs</p>
+          </article>
+          <article class="kpi clickable" tabindex="0" role="button" data-target="#performance">
+            <div class="kpi-top"><span>Fleet utilization</span><i id="util-trend">OPTIMAL</i></div>
+            <div class="kpi-main"><strong id="kpi-utilization">—</strong><small>%</small></div>
+            <div class="util-dots" id="util-dots"></div>
+            <p id="util-note">Agents currently active</p>
+          </article>
+          <article class="kpi clickable" tabindex="0" role="button" data-target="#performance">
+            <div class="kpi-top"><span>Efficiency leader</span><i>★</i></div>
+            <div class="leader-row">
+              <span class="leader-avatar" id="leader-avatar">—</span>
+              <div><strong id="kpi-best">—</strong><small id="leader-rate">Awaiting results</small></div>
+            </div>
+            <p>Lowest distance per delivery</p>
+          </article>
+        </div>
+
+        <div class="network-layout" id="network">
+          <article class="map-panel">
+            <div class="map-header">
+              <div>
+                <p class="eyebrow"><span>02</span> Live network</p>
+                <h3>Delivery control map</h3>
+              </div>
+              <div class="map-live"><i></i><span>Live movement</span></div>
+            </div>
+            <div class="map-subbar">
+              <div class="layer-tabs" role="group" aria-label="Route layers">
+                <button class="active" data-layer="all">All routes</button>
+                <button data-layer="pickup">Pickup legs</button>
+                <button data-layer="delivery">Delivery legs</button>
+              </div>
+              <div class="legend">
+                <span><i class="warehouse-dot"></i> Hub</span>
+                <span><i class="agent-dot"></i> Agent</span>
+                <span><i class="package-dot"></i> Drop</span>
+              </div>
+            </div>
+            <div class="canvas-wrap">
+              <canvas id="route-canvas" aria-label="Live map of hubs, agents and delivery routes"></canvas>
+              <div class="map-empty" id="map-empty">
+                <span>Network offline</span>
+                <p>Generate a route plan to activate the map</p>
+              </div>
+              <div class="map-tooltip" id="map-tooltip" hidden></div>
+              <div class="map-location">
+                <span>● LIVE</span>
+                <strong>FastBox Metro Grid</strong>
+              </div>
+              <div class="map-zoom" aria-label="Map zoom">
+                <button id="zoom-in" aria-label="Zoom in">+</button>
+                <button id="zoom-out" aria-label="Zoom out">−</button>
+                <button id="zoom-fit" aria-label="Fit all routes">
+                  <svg viewBox="0 0 18 18" aria-hidden="true"><path d="M3 7V3h4M11 3h4v4M15 11v4h-4M7 15H3v-4" /></svg>
+                </button>
+              </div>
+              <div class="map-hint">Drag to pan · Scroll to zoom · Click any marker</div>
+              <div class="route-focus" id="route-focus">
+                <div class="route-focus-top">
+                  <span>Selected route</span><i>IN TRANSIT</i>
+                </div>
+                <strong id="focus-package">—</strong>
+                <div class="focus-path">
+                  <span><i class="from"></i><b id="focus-agent">Agent —</b></span>
+                  <em></em>
+                  <span><i class="via"></i><b id="focus-warehouse">Hub —</b></span>
+                  <em></em>
+                  <span><i class="to"></i><b>Drop</b></span>
+                </div>
+                <div class="focus-metrics">
+                  <span><small>Total route</small><b id="focus-total">—</b></span>
+                  <span><small>Pickup</small><b id="focus-pickup">—</b></span>
+                  <span><small>Delivery</small><b id="focus-delivery">—</b></span>
+                </div>
+              </div>
+            </div>
+            <div class="map-toolbar">
+              <button id="replay-button" disabled>
+                <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4 6v4h4M5 10a6 6 0 1 0 2-4.5" /></svg>
+                Replay dispatch
+              </button>
+              <div class="route-ticker"><i></i><span id="map-caption">No active route plan</span></div>
+            </div>
+          </article>
+
+          <aside class="command-rail">
+            <article class="rail-panel">
+              <div class="rail-heading">
+                <div><p class="eyebrow"><span>03</span> Control signals</p><h3>Network pulse</h3></div>
+                <span class="health-score"><b id="health-score">—</b>/100</span>
+              </div>
+              <div id="insights" class="insights">
+                <div class="insight-placeholder"><span>◌</span><p>Signals will appear when your operation is live.</p></div>
+              </div>
+            </article>
+            <article class="rail-panel load-panel">
+              <div class="rail-heading">
+                <div><p class="eyebrow"><span>04</span> Capacity</p><h3>Workload balance</h3></div>
+                <span id="balance-label" class="balanced">Balanced</span>
+              </div>
+              <div id="load-bars" class="load-bars"></div>
+              <div class="capacity-note"><i></i><span><strong id="active-agent-count">—</strong> agents deployed</span><b id="capacity-packages">— packages</b></div>
+            </article>
+          </aside>
+        </div>
+
+        <section class="performance" id="performance">
+          <div class="section-heading compact">
+            <div>
+              <p class="eyebrow"><span>05</span> Fleet intelligence</p>
+              <h2>Performance, at a glance</h2>
+            </div>
+            <button class="export-button" id="export-button" disabled>
+              <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 3v10m0 0 4-4m-4 4L6 9M4 15v2h12v-2" /></svg>
+              Export operation
+            </button>
+          </div>
+          <div class="agent-grid" id="agent-grid">
+            <article class="agent-empty">Agent performance will appear here.</article>
+          </div>
+        </section>
+
+        <section class="intelligence-grid">
+          <article class="intelligence-card orange-card clickable" tabindex="0" role="button" data-target="#network">
+            <div class="intel-number">01</div>
+            <span class="intel-icon">⌁</span>
+            <h3>Smart dispatch</h3>
+            <p>Every package is matched to the closest available hub-side agent, reducing empty travel before pickup.</p>
+            <strong id="pickup-share">—</strong><small>of distance spent on pickup</small>
+          </article>
+          <article class="intelligence-card dark-card clickable" tabindex="0" role="button" data-target="#routes">
+            <div class="intel-number">02</div>
+            <span class="intel-icon">◉</span>
+            <h3>Complete visibility</h3>
+            <p>Follow every movement from agent start through hub collection to final customer drop-off.</p>
+            <strong id="route-visibility">—</strong><small>routes visible in real time</small>
+          </article>
+          <article class="intelligence-card lime-card clickable" tabindex="0" role="button" data-target="#performance">
+            <div class="intel-number">03</div>
+            <span class="intel-icon">↗</span>
+            <h3>Fleet efficiency</h3>
+            <p>Identify top performers instantly and make workload distribution easier to act on.</p>
+            <strong id="average-route">—</strong><small>average distance per delivery</small>
+          </article>
+        </section>
+
+        <section class="routes-section" id="routes">
+          <div class="section-heading compact">
+            <div>
+              <p class="eyebrow"><span>06</span> Route manifest</p>
+              <h2>Every delivery, in one view</h2>
+            </div>
+            <label class="table-search">
+              <span class="sr-only">Search deliveries</span>
+              <svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" /><path d="m12.5 12.5 4 4" /></svg>
+              <input id="table-search" type="search" placeholder="Search package, agent or hub" />
+            </label>
+          </div>
+          <div class="table-panel">
+            <div class="table-summary">
+              <span><i></i> All deliveries operational</span>
+              <b id="manifest-count">0 routes</b>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Package</th><th>Assigned agent</th><th>Origin hub</th>
+                    <th>Pickup leg</th><th>Delivery leg</th><th>Total distance</th><th>Status</th>
+                  </tr>
+                </thead>
+                <tbody id="assignment-table">
+                  <tr><td colspan="7" class="empty-cell">No active deliveries</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+      </section>
+
+      <section class="closing-cta">
+        <div>
+          <p class="eyebrow light"><span>READY</span> Built for every delivery day</p>
+          <h2>From scattered coordinates<br />to one clear operation.</h2>
+        </div>
+        <button class="button light-button" id="load-demo">
+          Launch base operation
+          <svg viewBox="0 0 20 20" aria-hidden="true"><path d="m7 4 6 6-6 6" /></svg>
+        </button>
+      </section>
+    </main>
+
+    <footer>
+      <a class="brand footer-brand" href="/">
+        <span class="brand-mark">
+          <svg viewBox="0 0 32 32" aria-hidden="true"><path d="M5 9.5 16 4l11 5.5v13L16 28 5 22.5v-13Z" /><path d="m5 9.5 11 5.7 11-5.7M16 15.2V28" /></svg>
+        </span>
+        <span>FASTBOX<small>Control tower</small></span>
+      </a>
+      <p>Every mile visible. Every delivery moving.</p>
+      <span class="footer-live"><i></i> Network operational</span>
+    </footer>
+
+    <div class="toast-region" id="toast-region" aria-live="polite"></div>
+
+    <script src="{{ url_for('static', filename='control-tower.js') }}"></script>
+  </body>
+</html>
